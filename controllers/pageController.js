@@ -1,6 +1,13 @@
 import nodemailer from "nodemailer";
 
+
 const getIndexPage = (req,res) => {
+//! aşağıdaki fonk yazmadım ama bu fonksiyon önemli.
+//*const photos = await Photo.find().sort({uploadedAt: -1}).limit(3) // tüm fotoları bul, updatedAt(modelimizde var) -1 diyince sanırsam en son yükleneni en başa al demek, limit de maks o kadar al. yani homepage de gösteriyoruz 6 dan fazla gözükmesini istemiyoruz.
+//* const numOfUser = await User.countDocuments({}) // user kısmındaki tüm dökümanlarının sayısını alarak, kullanıcı sayısına sahip olma.
+ 
+
+
     res.render("index", {
     link : "index" // Front End Ejs
 });

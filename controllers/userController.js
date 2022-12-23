@@ -5,7 +5,7 @@ import Photo from "../models/photoModel.js";
 
 //* The req.params property is an object containing properties mapped to the named route “parameters”. For example, if you have the route /student/:id, then the “id” property is available as req.params.id. This object defaults to {}.
 //* req.params.id = özel seçtiğin kullanıcı(idsi), örneğin cüneytle giriş yaptın , gizeme baktın
-//* res.locals.user._id = login olan kullanıcı(idsi)
+//* res.locals.user._id = login olan kullanıcı(idsi) cookiden alınan
 
 
 const createUser = async (req,res) => {
@@ -101,7 +101,7 @@ l
             //* jwt.sign() içine ilk yazdığımız payload(body), ikinci yazdığımız kendi isteğimize göre bir secretkey , 3. sü opsiyonel biz oraya tokenın sona erme tarihini yazdık.
             // ? Şimdi createToken içine verdiğimiz userIdyi, login kısmında eğer paswordlar eşleşirse oradaki veritabanındaki id yi, userId nin içine koyarak çalıştırıyoruz ve bize bir token oluşuyor.
 
-        const createToken = (userId) => { // ! parantezin için tokena vermek istediğimiz parametreleri veriyoruz. userId ismini biz verdik , payload kısmında tokenı jwtio da okuttuğumuz zaman sadece userId ve oluşturulduğu zaman falan olucak.
+        const createToken = (userId) => { // ! parantezin için tokena vermek istediğimiz parametreleri veriyoruz. userId ismini biz verdik , payload kısmında tokenı jwtio da okuttuğumuz zaman sadece userId ve oluşturulduğu zaman gibi şeyler  oluyor.
             return jwt.sign({userId}, process.env.JWT_SECRET, {
                 expiresIn : "2d"
             })
@@ -110,8 +110,8 @@ l
 
 
         const getDashboardPage = async (req,res) => {
-            const photos = await Photo.find({user: res.locals.user._id}) //! Kardeş git, bana dbde, photomodel de , "user :" kısmı o an giriş yapan kullanıcının adresine eşit olanı(res.locals.user._id) getir. 
-            const user = await User.findById({_id: res.locals.user._id }).populate(["followers", "followings"])
+            const photos = await Photo.find({user: res.locals.user._id}) //! Kardeş git, bana dbde, photomodel de , "user :" kısmı o an giriş yapan kullanıcının adresine eşit olanı(res.locals.user._id (cookie'den aldığımız)) getir. 
+            const user = await User.findById({_id: res.locals.user._id }).populate(["followers", "followings"]) //! Populate, normalde userı json olarak bana döndürecek ya postman, orda follower followingsler id olarak gözüküyor normalde liste halinde, populate yapınca onları da görebiliyoruz. örneğin o asdasdsaasd id li kişinin adı ve diğer bilgileri gibi ;)
              res.render("dashboard", {
              link : "dashboard", // linke tıklayınca dashboard ışıklı yansın istiyoruz diye f.e de link neyse o yansın diye kod yazdık.
              photos, // render metodu ile ejs gönderdik

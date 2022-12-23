@@ -17,7 +17,7 @@ import User from "../models/userModel.js";
 
 
 const checkUser = async (req,res,next) => {
-    const token = req.cookies.jwt; 
+    const token = req.cookies.jwt; //* login işlemi yaparken cookie'nin adını biz verdik jwt diye farklı dersek farklı olur.
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET,  async(err, decodedToken) => {  //! Kendimce özet- eğer cookiede token varsa, bunu önce al ve secretkeyiyle birlikte bir verify et , hata yoksa çözülmüş tokenının payloadundaki idsine bakarak veritabanındaki kullanıcının idsi ile eşitle ve son olarak da bunu res.locals.user diye tanımla.
             if (err) { // Hata varsa 
@@ -27,7 +27,7 @@ const checkUser = async (req,res,next) => {
             }else { // eğer varsa token 
                 // Decoded token = jwt içindeki payload kısımı =console.log("decoded : ", decodedToken);
                 const user2 = await User.findById(decodedToken.userId) //! userı, veritabanından gelecek olan kullanıcı ile token içindeki(payload kısmında) userId'si aynı olanları eşitle ve user2 değişkenine koy.
-                res.locals.user = user2  //! EN ÖNEMLİ PART DENİLEBİLİR.- veritabanından gelen eşleşmiş user2 değişkenimizi , localdeki usera(sol) atmış oluyoruz. Local dediğimiz de kullanıcının kendisine özel demek istiyorum.
+                res.locals.user = user2  //! EN ÖNEMLİ PART DENİLEBİLİR.- veritabanından gelen eşleşmiş user2 değişkenimizi , localdeki usera(sol) atmış oluyoruz. res.local.user sonuç olarak = cookieden gelen kullanıcı oluyor. Yani özetle cookiedeki veriyi res.locals.user'a atıyoruz her işlemimizde. ve zaten checkUser işlemini her olayda yaptığımız için diğer fonksiyonlarda kullanmadan önce bu fonksiyon çalışıyor en önce o yüzden, res.local.user parametresini başka fonksiyonların içine de koyabiliyoruz.
                 next();
             }
 
